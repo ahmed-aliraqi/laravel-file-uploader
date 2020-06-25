@@ -1,0 +1,39 @@
+{
+  "name": "laravel-media",
+  "version": "1.0.0",
+  "description": "This plugin used to upload files using laravel-media-library",
+  "main": "dist/file-uploader.umd.js",
+  "module": "dist/file-uploader.esm.js",
+  "unpkg": "dist/file-uploader.min.js",
+  "browser": {
+    "./sfc": "src/file-uploader.vue"
+  },
+  "files": [
+    "dist/*",
+    "src/*",
+    "attributes.json",
+    "tags.json"
+  ],
+  "vetur": {
+    "tags": "tags.json",
+    "attributes": "attributes.json"
+  },
+  "scripts": {
+    "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
+    "build:umd": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format umd --file dist/file-uploader.umd.js",
+    "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es --file dist/file-uploader.esm.js",
+    "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife --file dist/file-uploader.min.js"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "minimist": "^1.2.0",
+    "rollup": "^1.14.4",
+    "rollup-plugin-buble": "^0.19.6",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-uglify-es": "0.0.1",
+    "rollup-plugin-vue": "^4.7.2",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
