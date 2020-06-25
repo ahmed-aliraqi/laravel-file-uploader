@@ -1,5 +1,5 @@
 {
-  "name": "laravel-media-file-uploader",
+  "name": "laravel-file-uploader",
   "version": "1.0.0",
   "description": "This plugin used to upload files using laravel-media-library",
   "repository": {
