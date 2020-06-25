@@ -1,5 +1,5 @@
 {
-  "name": "laravel-media",
+  "name": "ahmed-aliraqi-file-uploader",
   "version": "1.0.0",
   "description": "This plugin used to upload files using laravel-media-library",
   "main": "dist/file-uploader.umd.js",
