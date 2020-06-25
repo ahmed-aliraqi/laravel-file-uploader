@@ -1,7 +1,23 @@
 {
-  "name": "ahmed-aliraqi-file-uploader",
+  "name": "laravel-media-file-uploader",
   "version": "1.0.0",
   "description": "This plugin used to upload files using laravel-media-library",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmed-aliraqi/laravel-media.git"
+  },
+  "keywords": [
+    "laravel",
+    "media",
+    "files",
+    "upload"
+  ],
+  "author": "Ahmed Fathy <aliraqi.dev@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahmed-aliraqi/laravel-media/issues"
+  },
+  "homepage": "https://github.com/ahmed-aliraqi/laravel-media#readme",
   "main": "dist/file-uploader.umd.js",
   "module": "dist/file-uploader.esm.js",
   "unpkg": "dist/file-uploader.min.js",
@@ -25,6 +41,7 @@
     "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife --file dist/file-uploader.min.js"
   },
   "devDependencies": {
+    "axios": "^0.19.2",
     "cross-env": "^5.2.0",
     "minimist": "^1.2.0",
     "rollup": "^1.14.4",
