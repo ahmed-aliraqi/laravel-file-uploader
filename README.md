@@ -4,7 +4,7 @@
 
 #### Installation
 ```bash
-npm i laravel-media-file-uploader
+npm i laravel-file-uploader
 ```
 #### Register Component
 ```js
@@ -25,4 +25,4 @@ Vue.use(FileUploader);
                accept="image/jpeg,image/png,image/jpg,image/gif"
 ></file-uploader>
 ```
-> the `$files` variable contains the `MediaResource` instance from `ahmed-aliraqi/laravel-media-uploader`.
+> the `$files` variable contains the `MediaResource` instance from `ahmed-aliraqi/laravel-media-uploader` composer package.
