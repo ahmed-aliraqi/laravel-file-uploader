@@ -10,7 +10,7 @@ npm i laravel-file-uploader --save-dev
 ```js
 // app.js
 
-import FileUploader from 'laravel-media-file-uploader';
+import FileUploader from 'laravel-file-uploader';
 
 Vue.use(FileUploader);
 ```
