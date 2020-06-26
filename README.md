@@ -10,7 +10,7 @@
 npm i laravel-file-uploader --save-dev
 ```
 #### Basic Usage
-```html
+```blade
 <div id="app">
     <file-uploader
             :max="1"
