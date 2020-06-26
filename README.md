@@ -25,7 +25,7 @@ npm i laravel-file-uploader --save-dev
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/laravel-file-uploader@^1.0/dist/file-uploader.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/laravel-file-uploader/dist/file-uploader.min.js"></script>
 <script>
   new Vue({
     el: '#app'
