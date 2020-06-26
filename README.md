@@ -2,6 +2,8 @@
 
 > This plugin register vue component to upload files using laravel-media-library.
 
+![Uploader](https://i.imgur.com/zspIP0f.gif)
+
 #### Requirements
 > You should install [ahmed-aliraqi/laravel-media-uploader](https://github.com/ahmed-aliraqi/laravel-media-uploader) composer package to work successfully.
 
