@@ -1,10 +1,10 @@
-# Laravel Media File Uploader
+# Laravel File Uploader
 
 > This plugin register vue component to upload files using laravel-media-library.
 
 #### Installation
 ```bash
-npm i laravel-file-uploader
+npm i laravel-file-uploader --save-dev
 ```
 #### Register Component
 ```js

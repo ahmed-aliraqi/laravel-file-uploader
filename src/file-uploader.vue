@@ -29,133 +29,134 @@
 </template>
 
 <script>
-    import axios from 'axios';
-    export default {
-        props: {
-            max: {
-                default: 12
-            },
-            media: {
-                required: false,
-                type: Array,
-                default: []
-            },
-            accept: {
-                required: false,
-                type: String,
-                default: '*',
-            },
-            notes: {
-                required: false,
-                type: String,
-                default: '',
-            },
-            label: {
-                required: false,
-                type: String,
-                default: '',
-            },
-            collection: {
-                required: false,
-                type: String,
-                default: '',
-            },
-            tokens: {
-                required: false,
-                type: Array,
-                default: [],
-            }
-        },
-        data() {
-            return {
-                files: this.media || [],
-                values: this.tokens,
-                inputFilesLength: 0,
-                pending: -1,
-            }
-        },
-        created() {
-            if (this.tokens.length) {
-                axios.get('/api/media', {
-                    params: {
-                        tokens: this.tokens
-                    }
-                }).then(response => {
-                    this.files = response.data.data;
-                });
-            }
-        },
-        methods: {
-            async readUrl(event) {
-                this.$emit('beforeUpload');
-                let input = event.target;
-                if (input.files) {
-                    let fileList = input.files;
+  import axios from 'axios';
 
-                    let filesCount = fileList.length > this.max - this.files.length
-                        ? this.max - this.files.length : fileList.length;
+  export default {
+    props: {
+      max: {
+        default: 12
+      },
+      media: {
+        required: false,
+        type: Array,
+        default: []
+      },
+      accept: {
+        required: false,
+        type: String,
+        default: '*',
+      },
+      notes: {
+        required: false,
+        type: String,
+        default: '',
+      },
+      label: {
+        required: false,
+        type: String,
+        default: '',
+      },
+      collection: {
+        required: false,
+        type: String,
+        default: '',
+      },
+      tokens: {
+        required: false,
+        type: Array,
+        default: [],
+      }
+    },
+    data() {
+      return {
+        files: this.media || [],
+        values: this.tokens,
+        inputFilesLength: 0,
+        pending: -1,
+      }
+    },
+    created() {
+      if (this.tokens.length) {
+        axios.get('/api/media', {
+          params: {
+            tokens: this.tokens
+          }
+        }).then(response => {
+          this.files = response.data.data;
+        });
+      }
+    },
+    methods: {
+      async readUrl(event) {
+        this.$emit('beforeUpload');
+        let input = event.target;
+        if (input.files) {
+          let fileList = input.files;
 
-                    this.inputFilesLength = filesCount;
+          let filesCount = fileList.length > this.max - this.files.length
+            ? this.max - this.files.length : fileList.length;
 
-                    this.pending = filesCount;
+          this.inputFilesLength = filesCount;
 
-                    for (let i = 0; i < filesCount; i++) {
-                        await this.upload(fileList[i])
-                            .then(response => {
-                                this.pending--;
+          this.pending = filesCount;
 
-                                let file = response.data.data;
+          for (let i = 0; i < filesCount; i++) {
+            await this.upload(fileList[i])
+              .then(response => {
+                this.pending--;
 
-                                this.files.push(file[0]);
+                let file = response.data.data;
 
-                                this.values.push(response.data.token);
+                this.files.push(file[0]);
 
-                                this.complete();
-                            })
-                            .catch(error => {
-                                this.pending--;
-                                this.complete();
-                            });
+                this.values.push(response.data.token);
 
-                    }
-                }
-            },
-            upload(file) {
-                return new Promise((resolve, reject) => {
-                    this.beforeUploading();
-                    let formData = new FormData();
-                    formData.append('file', file);
-                    formData.append('collection', this.collection);
-                    axios.post('/api/media/upload', formData)
-                        .then(response => {
-                            resolve(response);
-                        })
-                        .catch(error => {
-                            reject(error);
-                        });
-                });
-            },
-            deleteFile(file) {
-                if (file.data) {
-                    return;
-                }
-                axios.delete(file.links.delete.href).then(() => {
-                    this.$delete(this.files, this.files.indexOf(file));
-                });
-                this.$delete(this.values, this.files.indexOf(file));
-                this.inputFilesLength--;
                 this.complete();
-            },
-            beforeUploading() {
-                $('[type=submit]').attr('disabled', 'disabled');
-            },
-            complete() {
-                if (this.values.length >= this.inputFilesLength) {
-                    $('[type=submit]').removeAttr('disabled');
-                }
-            }
+              })
+              .catch(error => {
+                this.pending--;
+                this.complete();
+              });
+
+          }
         }
+      },
+      upload(file) {
+        return new Promise((resolve, reject) => {
+          this.beforeUploading();
+          let formData = new FormData();
+          formData.append('file', file);
+          formData.append('collection', this.collection);
+          axios.post('/api/media/upload', formData)
+            .then(response => {
+              resolve(response);
+            })
+            .catch(error => {
+              reject(error);
+            });
+        });
+      },
+      deleteFile(file) {
+        if (file.data) {
+          return;
+        }
+        axios.delete(file.links.delete.href).then(() => {
+          this.$delete(this.files, this.files.indexOf(file));
+        });
+        this.$delete(this.values, this.files.indexOf(file));
+        this.inputFilesLength--;
+        this.complete();
+      },
+      beforeUploading() {
+        $('[type=submit]').attr('disabled', 'disabled');
+      },
+      complete() {
+        if (this.values.length >= this.inputFilesLength) {
+          $('[type=submit]').removeAttr('disabled');
+        }
+      }
     }
+  }
 </script>
 <style scoped>
     @charset "UTF-8";
