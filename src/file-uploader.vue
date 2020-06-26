@@ -29,7 +29,7 @@
 </template>
 
 <script>
-  import axios from 'axios';
+  // import axios from 'axios';
 
   export default {
     props: {
@@ -39,7 +39,7 @@
       media: {
         required: false,
         type: Array,
-        default: []
+        default: () => []
       },
       accept: {
         required: false,
@@ -59,7 +59,7 @@
       collection: {
         required: false,
         type: String,
-        default: '',
+        default: 'default',
       },
       tokens: {
         required: false,
@@ -77,13 +77,15 @@
     },
     created() {
       if (this.tokens.length) {
-        axios.get('/api/media', {
-          params: {
-            tokens: this.tokens
-          }
-        }).then(response => {
-          this.files = response.data.data;
-        });
+        setTimeout(() => {
+          axios.get('/api/uploader/media', {
+            params: {
+              tokens: this.tokens
+            }
+          }).then(response => {
+            this.files = response.data.data;
+          });
+        }, 100);
       }
     },
     methods: {
@@ -127,7 +129,7 @@
           let formData = new FormData();
           formData.append('file', file);
           formData.append('collection', this.collection);
-          axios.post('/api/media/upload', formData)
+          axios.post('/api/uploader/media/upload', formData)
             .then(response => {
               resolve(response);
             })

@@ -3,12 +3,16 @@
 import vue from "rollup-plugin-vue";
 import buble from "rollup-plugin-buble";
 import commonjs from "rollup-plugin-commonjs";
-import replace from "rollup-plugin-replace";
-// import uglify from "rollup-plugin-uglify-es";
-import minimist from "minimist";
+import includePaths from 'rollup-plugin-includepaths';
 
-const argv = minimist(process.argv.slice(2));
-
+let includePathOptions = {
+  include: {
+    'axios': 'node_modules/axios/index.js'
+  },
+  paths: ['src/plugins', 'src/plugins/custom'],
+  external: [],
+  extensions: ['.js', '.json', '.html']
+}
 const config = {
   input: "src/entry.js",
   output: {
@@ -18,9 +22,7 @@ const config = {
   },
 
   plugins: [
-    replace({
-      "process.env.NODE_ENV": JSON.stringify("production")
-    }),
+    includePaths(includePathOptions),
     commonjs(),
     vue({
       css: true,
@@ -34,10 +36,5 @@ const config = {
     })
   ]
 };
-
-// Only minify browser (iife) version
-if (argv.format === "iife") {
-  // config.plugins.push(uglify());
-}
 
 export default config;
