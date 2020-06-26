@@ -3,16 +3,7 @@
 import vue from "rollup-plugin-vue";
 import buble from "rollup-plugin-buble";
 import commonjs from "rollup-plugin-commonjs";
-import includePaths from 'rollup-plugin-includepaths';
 
-let includePathOptions = {
-  include: {
-    'axios': 'node_modules/axios/index.js'
-  },
-  paths: ['src/plugins', 'src/plugins/custom'],
-  external: [],
-  extensions: ['.js', '.json', '.html']
-}
 const config = {
   input: "src/entry.js",
   output: {
@@ -22,7 +13,6 @@ const config = {
   },
 
   plugins: [
-    includePaths(includePathOptions),
     commonjs(),
     vue({
       css: true,

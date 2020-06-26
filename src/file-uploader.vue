@@ -8,7 +8,9 @@
                     <a class="delete" href="#"
                        title="Delete File"
                        @click.prevent="deleteFile(file)">
-                        <div class="fas fa-times"></div>
+                        <svg baseProfile="tiny" height="20px" id="Layer_1" version="1.2" viewBox="0 0 24 24"
+                             width="20px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#ffffff" d="M17.414,6.586c-0.78-0.781-2.048-0.781-2.828,0L12,9.172L9.414,6.586c-0.78-0.781-2.048-0.781-2.828,0  c-0.781,0.781-0.781,2.047,0,2.828L9.171,12l-2.585,2.586c-0.781,0.781-0.781,2.047,0,2.828C6.976,17.805,7.488,18,8,18  s1.024-0.195,1.414-0.586L12,14.828l2.586,2.586C14.976,17.805,15.488,18,16,18s1.024-0.195,1.414-0.586  c0.781-0.781,0.781-2.047,0-2.828L14.829,12l2.585-2.586C18.195,8.633,18.195,7.367,17.414,6.586z"/></svg>
                     </a>
                     <span class="size">{{ file.human_readable_size }}</span>
                 </div>
@@ -29,8 +31,6 @@
 </template>
 
 <script>
-  // import axios from 'axios';
-
   export default {
     props: {
       max: {
@@ -77,20 +77,37 @@
     },
     created() {
       if (this.tokens.length) {
-        setTimeout(() => {
-          axios.get('/api/uploader/media', {
-            params: {
-              tokens: this.tokens
+
+        let xhr = new XMLHttpRequest();
+        var vueInstance = this;
+
+        let params = Object.keys(this.tokens).map((key) => {
+          return 'tokens[]=' + this.tokens[key]
+        }).join('&');
+
+        xhr.onreadystatechange = function () {
+          if (this.readyState === 4) {
+            if (this.status === 200) {
+              if (this.responseText) {
+                vueInstance.files = JSON.parse(this.responseText).data;
+              }
             }
-          }).then(response => {
-            this.files = response.data.data;
-          });
-        }, 100);
+          }
+        };
+        xhr.open("GET", '/api/uploader/media?' + params, true);
+        xhr.send(null);
       }
     },
     methods: {
+      serialize(obj) {
+        var str = [];
+        for (var p in obj)
+          if (obj.hasOwnProperty(p)) {
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+          }
+        return str.join("&");
+      },
       async readUrl(event) {
-        this.$emit('beforeUpload');
         let input = event.target;
         if (input.files) {
           let fileList = input.files;
@@ -107,11 +124,11 @@
               .then(response => {
                 this.pending--;
 
-                let file = response.data.data;
+                let file = response.data;
 
                 this.files.push(file[0]);
 
-                this.values.push(response.data.token);
+                this.values.push(response.token);
 
                 this.complete();
               })
@@ -127,34 +144,56 @@
         return new Promise((resolve, reject) => {
           this.beforeUploading();
           let formData = new FormData();
+
           formData.append('file', file);
           formData.append('collection', this.collection);
-          axios.post('/api/uploader/media/upload', formData)
-            .then(response => {
-              resolve(response);
-            })
-            .catch(error => {
-              reject(error);
-            });
+
+          let xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function () {
+            if (this.readyState === 4) {
+              if (this.status === 200) {
+                if (this.responseText) {
+                  resolve(JSON.parse(this.responseText));
+                }
+              } else {
+                if (this.responseText) {
+                  reject(JSON.parse(this.responseText));
+                }
+              }
+            }
+          };
+          xhr.open("POST", '/api/uploader/media/upload', true);
+          xhr.send(formData);
         });
       },
       deleteFile(file) {
         if (file.data) {
           return;
         }
-        axios.delete(file.links.delete.href).then(() => {
-          this.$delete(this.files, this.files.indexOf(file));
-        });
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("DELETE", file.links.delete.href, true);
+        xhr.send();
+
+        this.$delete(this.files, this.files.indexOf(file));
         this.$delete(this.values, this.files.indexOf(file));
         this.inputFilesLength--;
         this.complete();
       },
       beforeUploading() {
-        $('[type=submit]').attr('disabled', 'disabled');
+        let input = document.querySelector('[type=submit]');
+        if (input) {
+          input.setAttribute('disabled', true);
+        }
+        this.$emit('beforeUpload');
       },
       complete() {
         if (this.values.length >= this.inputFilesLength) {
-          $('[type=submit]').removeAttr('disabled');
+          let input = document.querySelector('[type=submit]');
+          if (input) {
+            input.removeAttribute('disabled');
+          }
+          this.$emit('complete');
         }
       }
     }
