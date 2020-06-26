@@ -1,10 +1,10 @@
 {
   "name": "laravel-file-uploader",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "This plugin used to upload files using laravel-media-library",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ahmed-aliraqi/laravel-media.git"
+    "url": "git+https://github.com/ahmed-aliraqi/laravel-file-uploader.git"
   },
   "keywords": [
     "laravel",
@@ -15,9 +15,9 @@
   "author": "Ahmed Fathy <aliraqi.dev@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ahmed-aliraqi/laravel-media/issues"
+    "url": "https://github.com/ahmed-aliraqi/laravel-file-uploader/issues"
   },
-  "homepage": "https://github.com/ahmed-aliraqi/laravel-media#readme",
+  "homepage": "https://github.com/ahmed-aliraqi/laravel-file-uploader#readme",
   "main": "dist/file-uploader.umd.js",
   "module": "dist/file-uploader.esm.js",
   "unpkg": "dist/file-uploader.min.js",
