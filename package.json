@@ -2,9 +2,6 @@
   "name": "laravel-file-uploader",
   "version": "1.0.12",
   "description": "This plugin used to upload files using laravel-media-library",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ahmed-aliraqi/laravel-file-uploader.git"
