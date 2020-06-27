@@ -95,18 +95,18 @@
           }
         };
         xhr.open("GET", '/api/uploader/media?' + params, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        let token = document.head.querySelector('meta[name="csrf-token"]');
+
+        if (token) {
+          xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
+        } else {
+          console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+        }
         xhr.send(null);
       }
     },
     methods: {
-      serialize(obj) {
-        var str = [];
-        for (var p in obj)
-          if (obj.hasOwnProperty(p)) {
-            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-          }
-        return str.join("&");
-      },
       async readUrl(event) {
         let input = event.target;
         if (input.files) {
@@ -163,6 +163,14 @@
             }
           };
           xhr.open("POST", '/api/uploader/media/upload', true);
+          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+          let token = document.head.querySelector('meta[name="csrf-token"]');
+
+          if (token) {
+            xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
+          } else {
+            console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+          }
           xhr.send(formData);
         });
       },
@@ -173,6 +181,14 @@
 
         let xhr = new XMLHttpRequest();
         xhr.open("DELETE", file.links.delete.href, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        let token = document.head.querySelector('meta[name="csrf-token"]');
+
+        if (token) {
+          xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
+        } else {
+          console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+        }
         xhr.send();
 
         this.$delete(this.files, this.files.indexOf(file));
