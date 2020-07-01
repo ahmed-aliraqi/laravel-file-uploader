@@ -127,6 +127,7 @@
                 this.files.push(file[0]);
                 this.values.push(response.token);
                 this.complete();
+                input.value = '';
               })
               .catch(error => {
                 this.pending--;
