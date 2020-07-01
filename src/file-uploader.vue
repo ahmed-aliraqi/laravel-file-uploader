@@ -24,7 +24,7 @@
                            :accept="accept" :multiple="max > 1">
                     <img class="mw-100" v-if="i <= pending"
                          src="https://cdn.jsdelivr.net/npm/laravel-file-uploader/dist/img/loading-100.gif" alt="">
-                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus-circle"
+                    <svg v-else aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus-circle"
                          class="svg-inline--fa fa-plus-circle fa-w-16" role="img"
                          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <path fill="gray"
