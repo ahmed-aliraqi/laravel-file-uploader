@@ -316,7 +316,7 @@
         }
     }
 
-    .uploader .add svg {
+    .uploader .add img, .uploader .add svg {
         width: 30%;
         margin: 0 auto
     }
