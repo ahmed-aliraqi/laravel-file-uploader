@@ -72,3 +72,9 @@ Vue.use(FileUploader);
 	@complete="handleComplete()"
 ></file-uploader>
 ```
+
+> **Note:**
+> Do not forget to store the laravel `csrf` token in an HTML `meta` tag:
+```blade
+<meta name="csrf-token" content="{{ csrf_token() }}">
+```
