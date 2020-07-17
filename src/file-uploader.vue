@@ -126,12 +126,11 @@
                 let file = response.data;
                 this.files.push(file[0]);
                 this.values.push(response.token);
-                this.complete();
-                input.value = '';
+                this.complete(input);
               })
               .catch(error => {
                 this.pending--;
-                this.complete();
+                this.complete(input);
               });
           }
         }
@@ -193,11 +192,14 @@
         }
         this.$emit('beforeUpload');
       },
-      complete() {
+      complete(file) {
         if (this.values.length >= this.inputFilesLength) {
           let input = document.querySelector('[type=submit]');
           if (input) {
             input.removeAttribute('disabled');
+          }
+          if(file) {
+            file.value = '';
           }
           this.$emit('complete');
         }
