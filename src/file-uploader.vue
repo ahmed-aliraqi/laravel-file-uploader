@@ -1,7 +1,7 @@
 <template>
     <div class="form-group">
         <label>{{ label }}</label>
-        <div class="row uploader">
+        <div class="uploader">
             <div class="px-3" v-for="file in files">
                 <div class="img-item mw-100 mb-4" :title="file.file_name">
                     <img class="mw-100"
@@ -207,8 +207,9 @@
 </script>
 <style scoped>
     .d-none {
-        display: none!important;
+        display: none !important;
     }
+
     .mw-100 {
         max-width: 100% !important
     }
@@ -227,6 +228,13 @@
 
     .text-muted {
         color: #6c757d !important
+    }
+
+    .uploader {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -15px;
+        margin-right: -15px;
     }
 
     .uploader .img-item:not(.add) {
