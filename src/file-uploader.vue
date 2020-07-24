@@ -206,6 +206,9 @@
   }
 </script>
 <style scoped>
+    .d-none {
+        display: none!important;
+    }
     .mw-100 {
         max-width: 100% !important
     }
