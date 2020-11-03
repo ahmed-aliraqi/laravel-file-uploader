@@ -1,177 +1,263 @@
 <template>
-    <div class="form-group">
-        <label>{{ label }}</label>
-        <div class="uploader">
-            <div class="px-3" v-for="file in files">
-                <div class="img-item mw-100 mb-4" :title="file.file_name">
-                    <img class="mw-100"
-                         :src="file.preview || 'https://cdn.jsdelivr.net/npm/laravel-file-uploader/dist/img/attach.png'"
-                         alt="">
-                    <a class="delete" href="#"
-                       title="Delete File"
-                       @click.prevent="deleteFile(file)">
-                        <svg baseProfile="tiny" height="24px" id="Layer_1" version="1.2" viewBox="0 0 22 30"
-                             width="20px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-                             xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#ffffff" d="M17.414,6.586c-0.78-0.781-2.048-0.781-2.828,0L12,9.172L9.414,6.586c-0.78-0.781-2.048-0.781-2.828,0  c-0.781,0.781-0.781,2.047,0,2.828L9.171,12l-2.585,2.586c-0.781,0.781-0.781,2.047,0,2.828C6.976,17.805,7.488,18,8,18  s1.024-0.195,1.414-0.586L12,14.828l2.586,2.586C14.976,17.805,15.488,18,16,18s1.024-0.195,1.414-0.586  c0.781-0.781,0.781-2.047,0-2.828L14.829,12l2.585-2.586C18.195,8.633,18.195,7.367,17.414,6.586z"/></svg>
-                    </a>
-                    <span class="size">{{ file.human_readable_size }}</span>
-                </div>
-            </div>
-            <div class="px-3"
-                 v-for="i in (max - files.length < 0 ? 0 : max - files.length)">
-                <label class="img-item add mw-100 mb-4">
-                    <input class="d-none" ref="file" type="file" @change="readUrl"
-                           :accept="accept" :multiple="max > 1">
-                    <img class="mw-100" v-if="i <= pending"
-                         src="https://cdn.jsdelivr.net/npm/laravel-file-uploader/dist/img/loading-100.gif" alt="">
-                    <svg v-else aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus-circle"
-                         class="svg-inline--fa fa-plus-circle fa-w-16" role="img"
-                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path fill="gray"
-                              d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path>
-                    </svg>
-                </label>
-            </div>
-        </div>
-        <input type="hidden" name="media[]" v-for="token in values" :value="token">
-        <small class="text-muted">{{ notes }}</small>
+  <div>
+    <label>{{ label }}</label>
+    <div class="uploader-flex uploader-flex-wrap">
+      <div
+          v-for="file in files"
+          :title="file.file_name"
+          class="item uploader-flex uploader-relative uploader-overflow-hidden uploader-items-center uploader-justify-center uploader-m-2 uploader-w-32 uploader-h-32 uploader-border-2 uploader-border-dashed uploader-rounded-md uploader-border-gray-500 uploader-text-gray-500 focus:uploader-outline-none">
+        <!-- Preview -->
+        <img :src="file.preview"
+             class="uploader-absolute uploader-w-full uploader-h-full uploader-object-contain" alt="preview">
+
+        <!-- Delete -->
+        <button
+            title="Delete"
+            @click.prevent="deleteFile(file)"
+            class="uploader-absolute uploader-bg-red-600 uploader-text-white uploader-z-10 uploader-w-6 uploader-h-6 uploader-text-sm uploader-top-0 uploader-right-0 uploader-flex uploader-items-center uploader-justify-center focus:uploader-outline-none">
+          <svg class="uploader-w-5 uploader-h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+               xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
+        </button>
+
+        <button
+            title="Show"
+            @click.prevent="preview = file.preview"
+            class="uploader-absolute uploader-bg-green-600 uploader-text-white uploader-z-10 uploader-w-6 uploader-h-6 uploader-text-sm uploader-top-0 uploader-left-0 uploader-flex uploader-items-center uploader-justify-center focus:uploader-outline-none">
+          <svg class="uploader-w-5 uploader-h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+               xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+
+        <span
+            class="uploader-font-sans uploader-absolute uploader-w-full uploader-flex uploader-justify-center uploader-bg-gray-900 uploader-text-white uploader-text-sm uploader-bottom-0">
+          {{ file.human_readable_size }}
+        </span>
+      </div>
+      <label v-if="!unlimited" v-for="i in (maximum - files.length < 0 ? 0 : maximum - files.length)"
+             class="item uploader-flex uploader-relative uploader-overflow-hidden uploader-items-center uploader-justify-center uploader-m-2 uploader-w-32 uploader-h-32 uploader-border-2 uploader-border-dashed uploader-rounded-xl uploader-border-gray-500 uploader-text-gray-500 focus:uploader-outline-none hover:uploader-bg-gray-100 uploader-cursor-pointer">
+
+        <input class="uploader-hidden" ref="file" type="file" @change="readUrl"
+               :accept="accept" :multiple="maximum > 1">
+        <!-- Spinner -->
+        <svg v-if="i <= pending" class="uploader-animate-spin uploader-h-8 uploader-w-8 uploader-text-gray-500"
+             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="uploader-opacity-50" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="uploader-opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+
+        <!-- Add -->
+        <svg v-else class="uploader-w-12 uploader-h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+
+      </label>
+      <label v-if="unlimited"
+             class="uploader-flex uploader-relative uploader-overflow-hidden uploader-items-center uploader-justify-center uploader-m-2 uploader-w-32 uploader-h-32 uploader-border-2 uploader-border-dashed uploader-rounded-xl uploader-border-gray-500 uploader-text-gray-500 focus:uploader-outline-none hover:uploader-bg-gray-100 uploader-cursor-pointer">
+
+        <input class="uploader-hidden" ref="file" type="file" @change="readUrl"
+               :accept="accept" :multiple="true">
+        <!-- Spinner -->
+        <svg v-if="uploading" class="uploader-animate-spin uploader-h-8 uploader-w-8 uploader-text-gray-500"
+             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="uploader-opacity-50" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="uploader-opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+
+        <!-- Add -->
+        <svg v-else class="uploader-w-12 uploader-h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+
+      </label>
     </div>
+
+
+    <input type="hidden" :form="form" name="media[]" v-for="token in values" :value="token">
+    <small class="uploader-text-gray-600">{{ notes }}</small>
+    <div v-if="preview"
+         class="uploader-overflow-auto uploader-fixed uploader-flex uploader-items-start uploader-pt-10 uploader-justify-center uploader-w-full uploader-h-full uploader-top-0 uploader-left-0-0 uploader-bg-black uploader-bg-opacity-75 uploader-z-20">
+      <button
+          @click.prevent="preview = null"
+          class="uploader-absolute uploader-text-white uploader-z-10 uploader-w-8 uploader-h-8 uploader-text-sm uploader-top-0 uploader-right-0 uploader-flex uploader-items-center uploader-justify-center focus:uploader-outline-none">
+        <svg class="uploader-w-8 uploader-h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <div class="uploader-w-2/3">
+        <img class="uploader-bg-white uploader-object-contain uploader-w-full uploader-p-1 uploader-h-300-px"
+             :src="preview"
+             alt="preview">
+        <div
+            class="uploader-flex uploader-items-center uploader-justify-start uploader-overflow-auto uploader-h-32 uploader-w-full">
+
+          <img v-for="file in files"
+               class="uploader-opacity-50 uploader-cursor-pointer hover:uploader-opacity-100 uploader-object-contain uploader-bg-white uploader-mx-2 uploader-w-20 uploader-h-20 uploader-border uploader-border-gray-400"
+               :src="file.preview"
+               @mouseover="preview = file.preview">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
-  export default {
-    props: {
-      max: {
-        default: 12
-      },
-      media: {
-        required: false,
-        type: Array,
-        default: () => []
-      },
-      accept: {
-        required: false,
-        type: String,
-        default: '*',
-      },
-      notes: {
-        required: false,
-        type: String,
-        default: '',
-      },
-      label: {
-        required: false,
-        type: String,
-        default: '',
-      },
-      collection: {
-        required: false,
-        type: String,
-        default: 'default',
-      },
-      tokens: {
-        required: false,
-        type: Array,
-        default: [],
-      }
+export default {
+  props: {
+    max: {
+      default: 1
     },
-    data() {
-      return {
-        files: this.media || [],
-        values: this.tokens,
-        inputFilesLength: 0,
-        pending: -1,
-      }
+    unlimited: {
+      default: false
     },
-    created() {
-      if (this.tokens.length) {
-        let xhr = new XMLHttpRequest();
-        var vueInstance = this;
-        let params = Object.keys(this.tokens).map((key) => {
-          return 'tokens[]=' + this.tokens[key]
-        }).join('&');
-        xhr.onreadystatechange = function () {
-          if (this.readyState === 4) {
-            if (this.status === 200) {
-              if (this.responseText) {
-                vueInstance.files = JSON.parse(this.responseText).data;
-              }
+    media: {
+      required: false,
+      type: Array,
+      default: () => []
+    },
+    accept: {
+      required: false,
+      type: String,
+      default: '*',
+    },
+    notes: {
+      required: false,
+      type: String,
+      default: '',
+    },
+    label: {
+      required: false,
+      type: String,
+      default: '',
+    },
+    collection: {
+      required: false,
+      type: String,
+      default: 'default',
+    },
+    tokens: {
+      required: false,
+      type: Array,
+      default: [],
+    },
+    form: {
+      required: false,
+      default: false
+    }
+  },
+  data() {
+    return {
+      files: this.media || [],
+      values: this.tokens,
+      inputFilesLength: 0,
+      pending: -1,
+      uploading: false,
+      preview: null,
+      maximum: this.max,
+    }
+  },
+  created() {
+    if (this.unlimited) {
+      this.maximum = 0;
+    }
+    if (this.tokens.length) {
+      let xhr = new XMLHttpRequest();
+      var vueInstance = this;
+      let params = Object.keys(this.tokens).map((key) => {
+        return 'tokens[]=' + this.tokens[key]
+      }).join('&');
+      xhr.onreadystatechange = function () {
+        if (this.readyState === 4) {
+          if (this.status === 200) {
+            if (this.responseText) {
+              vueInstance.files = JSON.parse(this.responseText).data;
             }
           }
-        };
-        xhr.open("GET", '/api/uploader/media?' + params, true);
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        let token = document.head.querySelector('meta[name="csrf-token"]');
-        if (token) {
-          xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
-        } else {
-          console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
         }
-        xhr.send(null);
+      };
+      xhr.open("GET", '/api/uploader/media?' + params, true);
+      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      let token = document.head.querySelector('meta[name="csrf-token"]');
+      if (token) {
+        xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
+      } else {
+        console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
       }
-    },
-    methods: {
-      async readUrl(event) {
-        let input = event.target;
-        if (input.files) {
-          let fileList = input.files;
-          let filesCount = fileList.length > this.max - this.files.length
-            ? this.max - this.files.length : fileList.length;
-          this.inputFilesLength = filesCount;
+      xhr.send(null);
+    }
+  },
+  methods: {
+    async readUrl(event) {
+      let input = event.target;
+      if (input.files) {
+        let fileList = input.files;
+        let filesCount = fileList.length > this.maximum - this.files.length
+            ? this.maximum - this.files.length : fileList.length;
+        this.inputFilesLength = filesCount;
+        if (!this.unlimited) {
           this.pending = filesCount;
-          for (let i = 0; i < filesCount; i++) {
-            await this.upload(fileList[i])
+        } else {
+          filesCount = fileList.length;
+        }
+        this.uploading = true;
+
+        for (let i = 0; i < filesCount; i++) {
+          await this.upload(fileList[i])
               .then(response => {
-                this.pending--;
+                if (!this.unlimited) {
+                  this.pending--;
+                }
+                this.uploading = false;
                 let file = response.data;
                 this.files.push(file[0]);
                 this.values.push(response.token);
                 this.complete();
               })
               .catch(error => {
-                this.pending--;
+                if (!this.unlimited) {
+                  this.pending--;
+                }
+                this.uploading = false;
                 this.complete();
               });
-          }
         }
-      },
-      upload(file) {
-        return new Promise((resolve, reject) => {
-          this.beforeUploading();
-          let formData = new FormData();
-          formData.append('file', file);
-          formData.append('collection', this.collection);
-          let xhr = new XMLHttpRequest();
-          xhr.onreadystatechange = function () {
-            if (this.readyState === 4) {
-              if (this.status === 200) {
-                if (this.responseText) {
-                  resolve(JSON.parse(this.responseText));
-                }
-              } else {
-                if (this.responseText) {
-                  reject(JSON.parse(this.responseText));
-                }
+      }
+    },
+    upload(file) {
+      return new Promise((resolve, reject) => {
+        this.beforeUploading();
+        let formData = new FormData();
+        formData.append('file', file);
+        formData.append('collection', this.collection);
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (this.readyState === 4) {
+            if (this.status === 200) {
+              if (this.responseText) {
+                resolve(JSON.parse(this.responseText));
+              }
+            } else {
+              if (this.responseText) {
+                reject(JSON.parse(this.responseText));
               }
             }
-          };
-          xhr.open("POST", '/api/uploader/media/upload', true);
-          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-          let token = document.head.querySelector('meta[name="csrf-token"]');
-          if (token) {
-            xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
-          } else {
-            console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
           }
-          xhr.send(formData);
-        });
-      },
-      deleteFile(file) {
-        if (file.data) {
-          return;
-        }
-        let xhr = new XMLHttpRequest();
-        xhr.open("DELETE", file.links.delete.href, true);
+        };
+        xhr.open("POST", '/api/uploader/media/upload', true);
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         let token = document.head.querySelector('meta[name="csrf-token"]');
         if (token) {
@@ -179,157 +265,46 @@
         } else {
           console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
         }
-        xhr.send();
-        this.$delete(this.files, this.files.indexOf(file));
-        this.$delete(this.values, this.files.indexOf(file));
-        this.inputFilesLength--;
-        this.complete();
-      },
-      beforeUploading() {
+        xhr.send(formData);
+      });
+    },
+    deleteFile(file) {
+      if (file.data) {
+        return;
+      }
+      let xhr = new XMLHttpRequest();
+      xhr.open("DELETE", file.links.delete.href, true);
+      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      let token = document.head.querySelector('meta[name="csrf-token"]');
+      if (token) {
+        xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
+      } else {
+        console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+      }
+      xhr.send();
+      this.$delete(this.files, this.files.indexOf(file));
+      this.$delete(this.values, this.files.indexOf(file));
+      this.inputFilesLength--;
+      this.complete();
+    },
+    beforeUploading() {
+      let input = document.querySelector('[type=submit]');
+      if (input) {
+        input.setAttribute('disabled', true);
+      }
+      this.$emit('beforeUpload');
+    },
+    complete() {
+      if (this.values.length >= this.inputFilesLength) {
         let input = document.querySelector('[type=submit]');
         if (input) {
-          input.setAttribute('disabled', true);
+          input.removeAttribute('disabled');
         }
-        this.$emit('beforeUpload');
-      },
-      complete() {
-        if (this.values.length >= this.inputFilesLength) {
-          let input = document.querySelector('[type=submit]');
-          if (input) {
-            input.removeAttribute('disabled');
-          }
 
-          this.$emit('complete');
-        }
+        this.$emit('complete');
       }
     }
   }
+}
 </script>
-<style scoped>
-    .d-none {
-        display: none !important;
-    }
-
-    .mw-100 {
-        max-width: 100% !important
-    }
-
-    .mb-4 {
-        margin-bottom: 1.5rem !important
-    }
-
-    .px-3 {
-        padding-right: 1rem !important
-    }
-
-    .px-3 {
-        padding-left: 1rem !important
-    }
-
-    .text-muted {
-        color: #6c757d !important
-    }
-
-    .uploader {
-        display: flex;
-        flex-wrap: wrap;
-        margin-left: -15px;
-        margin-right: -15px;
-    }
-
-    .uploader .img-item:not(.add) {
-        position: relative;
-        text-align: center;
-        border: 2px dashed gray;
-        border-radius: 15px 0;
-        overflow: hidden;
-    }
-
-    .uploader .img-item:not(.add) img {
-        text-align: center;
-        max-width: 100%
-    }
-
-    @media (min-width: 992px) {
-        .uploader .img-item {
-            width: 140px;
-        }
-
-        .uploader .img-item:not(.add) img {
-            height: 96px;
-        }
-    }
-
-    @media (min-width: 768px) and (max-width: 991.98px) {
-        .uploader .img-item {
-            width: 170px;
-        }
-
-        .uploader .img-item:not(.add) img {
-            height: 126px;
-        }
-    }
-
-    @media (max-width: 767.98px) {
-        .uploader .img-item:not(.add) img {
-            height: 96px;
-        }
-    }
-
-    .uploader .img-item:not(.add) a.delete {
-        position: absolute;
-        top: 0;
-        right: 0;
-        color: #fff !important;
-        background: red;
-        padding: 1px;
-        text-align: center;
-        width: 20px;
-        height: 20px;
-        font-size: 13px
-    }
-
-    .uploader .img-item:not(.add) .size {
-        position: absolute;
-        width: 100%;
-        left: 0;
-        bottom: 0;
-        background: #808080d6;
-        border-radius: 0 0 15px 0;
-        color: #fff;
-        font-weight: 700
-    }
-
-    .uploader .add {
-        cursor: pointer;
-        border: 2px dashed gray;
-        border-radius: 15px 0;
-        display: flex;
-        align-items: center
-    }
-
-    @media (min-width: 992px) {
-        .uploader .add {
-            height: 100px;
-            width: 140px;
-        }
-    }
-
-    @media (min-width: 768px) and (max-width: 991.98px) {
-        .uploader .add {
-            height: 130px
-        }
-    }
-
-    @media (max-width: 767.98px) {
-        .uploader .add {
-            height: 100px;
-            width: 140px;
-        }
-    }
-
-    .uploader .add img, .uploader .add svg {
-        width: 30%;
-        margin: 0 auto
-    }
-</style>
+<style scoped src="../dist/uploader.css"></style>

@@ -1,6 +1,6 @@
 {
   "name": "laravel-file-uploader",
-  "version": "1.0.21",
+  "version": "2.0.0",
   "description": "This plugin used to upload files using laravel-media-library",
   "repository": {
     "type": "git",
@@ -35,10 +35,11 @@
     "attributes": "attributes.json"
   },
   "scripts": {
-    "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
+    "build": "npm run build:tailwind && npm run build:unpkg && npm run build:es && npm run build:umd",
     "build:umd": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format umd --file dist/file-uploader.umd.js",
     "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es --file dist/file-uploader.esm.js",
-    "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife --file dist/file-uploader.min.js"
+    "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife --file dist/file-uploader.min.js",
+    "build:tailwind": "npx tailwindcss build ./src/css/uploader.css -o ./dist/uploader.css"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
@@ -48,6 +49,7 @@
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-vue": "^4.7.2",
     "vue": "^2.6.10",
+    "tailwindcss": "^1.9.6",
     "vue-template-compiler": "^2.6.10"
   }
 }
