@@ -1,5 +1,8 @@
 # Change Log
 
+### 2.0.1
+- **Fixes**
+    - Fix slider styling.
 ### 2.0.0
 - **Changes**
     - Use tailwind css UI.

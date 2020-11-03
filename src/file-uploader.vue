@@ -86,7 +86,7 @@
     <input type="hidden" :form="form" name="media[]" v-for="token in values" :value="token">
     <small class="uploader-text-gray-600">{{ notes }}</small>
     <div v-if="preview"
-         class="uploader-overflow-auto uploader-fixed uploader-flex uploader-items-start uploader-pt-10 uploader-justify-center uploader-w-full uploader-h-full uploader-top-0 uploader-left-0-0 uploader-bg-black uploader-bg-opacity-75 uploader-z-20">
+         class="uploader-overflow-auto uploader-fixed uploader-flex uploader-items-start uploader-pt-10 uploader-justify-center uploader-w-full uploader-h-full uploader-top-0 uploader-left-0 uploader-bg-black uploader-bg-opacity-75 uploader-z-999999999">
       <button
           @click.prevent="preview = null"
           class="uploader-absolute uploader-text-white uploader-z-10 uploader-w-8 uploader-h-8 uploader-text-sm uploader-top-0 uploader-right-0 uploader-flex uploader-items-center uploader-justify-center focus:uploader-outline-none">

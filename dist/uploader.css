@@ -826,12 +826,8 @@ video {
   width: 100%;
 }
 
-.uploader-z-10 {
-  z-index: 10;
-}
-
-.uploader-z-20 {
-  z-index: 20;
+.uploader-z-999999999 {
+  z-index: 999999999;
 }
 
 @-webkit-keyframes spin {
