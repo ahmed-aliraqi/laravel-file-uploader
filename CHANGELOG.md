@@ -1,5 +1,8 @@
 # Change Log
 
+### 2.0.2
+- **Fixes**
+    - Fix container spacing.
 ### 2.0.1
 - **Fixes**
     - Fix slider styling.

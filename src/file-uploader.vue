@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="uploader-mb-4">
     <label>{{ label }}</label>
     <div class="uploader-flex uploader-flex-wrap">
       <div
