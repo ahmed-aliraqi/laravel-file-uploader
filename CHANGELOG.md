@@ -1,5 +1,10 @@
 # Change Log
 
+### 2.0.3
+- **Added**
+    - Add ability to close slider pop up on press ESC key
+- **Fixes**
+    - Styling preview slider.
 ### 2.0.2
 - **Fixes**
     - Fix container spacing.

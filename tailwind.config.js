@@ -9,6 +9,10 @@ module.exports = {
     content: ['./src/file-uploader.vue'],
   },
   theme: {
+    inset: {
+      '0': '0',
+      '10': '10px',
+    },
     zIndex: {
       '999999999': 999999999,
     },

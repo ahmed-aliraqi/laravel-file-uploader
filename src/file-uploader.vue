@@ -86,25 +86,26 @@
     <input type="hidden" :form="form" name="media[]" v-for="token in values" :value="token">
     <small class="uploader-text-gray-600">{{ notes }}</small>
     <div v-if="preview"
-         class="uploader-overflow-auto uploader-fixed uploader-flex uploader-items-start uploader-pt-10 uploader-justify-center uploader-w-full uploader-h-full uploader-top-0 uploader-left-0 uploader-bg-black uploader-bg-opacity-75 uploader-z-999999999">
-      <button
-          @click.prevent="preview = null"
-          class="uploader-absolute uploader-text-white uploader-z-10 uploader-w-8 uploader-h-8 uploader-text-sm uploader-top-0 uploader-right-0 uploader-flex uploader-items-center uploader-justify-center focus:uploader-outline-none">
-        <svg class="uploader-w-8 uploader-h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-             xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
+         @click.self="preview = null"
+         class="uploader-overflow-auto uploader-fixed uploader-flex uploader-justify-center uploader-w-full uploader-h-full uploader-top-0 uploader-left-0 uploader-bg-black uploader-bg-opacity-50 uploader-z-999999999">
 
-      <div class="uploader-w-2/3">
-        <img class="uploader-bg-white uploader-object-contain uploader-w-full uploader-p-1 uploader-h-300-px"
+      <div class="uploader-w-full md:uploader-w-1/2 uploader-mx-2 uploader-rounded-t-lg uploader-shadow-md uploader-mt-10 uploader-bg-white uploader-h-300-px uploader-relative uploader-border uploader-border-gray-600">
+        <button
+            @click.prevent="preview = null"
+            class="uploader-bg-gray-600 hover:uploader-bg-gray-800 uploader-shadow-md uploader-absolute uploader-text-white uploader-z-10 uploader-w-6 uploader-h-6 uploader-text-sm uploader-top-10 uploader-right-10 uploader-flex uploader-items-center uploader-justify-center focus:uploader-outline-none">
+          <svg class="uploader-w-8 uploader-h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+               xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        <img class="uploader-object-contain uploader-w-full uploader-p-1 uploader-h-full"
              :src="preview"
              alt="preview">
         <div
-            class="uploader-flex uploader-items-center uploader-justify-start uploader-overflow-auto uploader-h-32 uploader-w-full">
+            class="uploader-bg-white uploader-flex uploader-items-center uploader-justify-start uploader-overflow-auto uploader-py-2 uploader-w-full uploader-mt-1 uploader-border uploader-border-gray-600 uploader-rounded-b-lg uploader-shadow-2xl">
 
           <img v-for="file in files"
-               class="uploader-opacity-50 uploader-cursor-pointer hover:uploader-opacity-100 uploader-object-contain uploader-bg-white uploader-mx-2 uploader-w-20 uploader-h-20 uploader-border uploader-border-gray-400"
+               class="uploader-cursor-pointer hover:uploader-border-gray-600 uploader-object-cover uploader-bg-white uploader-mx-2 uploader-w-20 uploader-h-20 uploader-border uploader-border-gray-400"
                :src="file.preview"
                @mouseover="preview = file.preview">
 
@@ -171,6 +172,13 @@ export default {
     }
   },
   created() {
+    const handleEscape = e => {
+      if (e.key === 'Esc' || e.key === 'Escape') {
+        this.preview = null;
+      }
+    }
+    document.addEventListener('keydown', handleEscape);
+
     if (this.unlimited) {
       this.maximum = 0;
     }
