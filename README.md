@@ -2,7 +2,7 @@
 
 > This plugin register vue component to upload files using laravel-media-library.
 
-![Uploader](https://github.com/ahmed-aliraqi/laravel-file-uploader/blob/master/screenshots/uploader.gif?raw=true)
+![Uploader](https://github.com/ahmed-aliraqi/laravel-file-uploader/blob/master/screenshots/uploader-v2.gif?raw=true)
 
 
 #### Requirements
