@@ -221,7 +221,9 @@ export default {
         } else {
           filesCount = fileList.length;
         }
-        this.uploading = true;
+        if (filesCount > 0) {
+          this.uploading = true;
+        }
 
         for (let i = 0; i < filesCount; i++) {
           await this.upload(fileList[i])

@@ -1,5 +1,8 @@
 # Change Log
 
+### 2.0.4
+- **Fixes**
+    - Remove uploading spinner when reset the file input.
 ### 2.0.3
 - **Added**
     - Add ability to close slider pop up on press ESC key
