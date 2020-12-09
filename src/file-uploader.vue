@@ -83,7 +83,7 @@
     </div>
 
 
-    <input type="hidden" :form="form" name="media[]" v-for="token in values" :value="token">
+    <input type="hidden" :form="form" :name="`${(name || 'media')}[]`" v-for="token in values" :value="token">
     <small class="uploader-text-gray-600">{{ notes }}</small>
     <div v-if="preview"
          @click.self="preview = null"
@@ -158,6 +158,11 @@ export default {
     form: {
       required: false,
       default: false
+    },
+    name: {
+      required: false,
+      type: String,
+      default: null
     }
   },
   data() {
