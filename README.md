@@ -64,6 +64,7 @@ Vue.use(FileUploader);
 |label| optional - default `null`| string| the label of the uploader|
 |collection| optional - default `default`|string| the media library collection that the file will store in|
 |tokens| optional - default: `[]`|array|the recently uploaded files tokens, used to display recently uploaded files in validation case|
+|name| optional - default: `null`|array|the input name of the uploader|
 
 ##### Events  
 * beforeUpload
