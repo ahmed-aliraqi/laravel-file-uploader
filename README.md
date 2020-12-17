@@ -18,6 +18,7 @@ npm i laravel-file-uploader --save-dev
     <file-uploader
             :unlimited="true"
             collection="avatars"
+            name="media"
             :tokens="{{ json_encode(old('media', [])) }}"
             label="Upload Avatar"
             notes="Supported types: jpeg, png,jpg,gif"
@@ -46,6 +47,7 @@ Vue.use(FileUploader);
 <file-uploader :media="{{ $user->getMediaResource('avatars') }}"
                :unlimited="true"
                collection="avatars"
+               name="media"
                :tokens="{{ json_encode(old('media', [])) }}"
                label="Upload Avatar"
                notes="Supported types: jpeg, png,jpg,gif"
@@ -55,6 +57,7 @@ Vue.use(FileUploader);
 ##### Attributes
 | Attribute |Rule | Type  |Description |
 |--|--|--|--|
+| name | optional - default: `media`  |string | the name of tokens fields  |
 | media | optional - default: `[]`  |array | used to display an existing files  |
 | unlimited |optional - default:`false`| boolean| upload unlimited files - if let it `false` will not be multiple select|
 | max|optional - default:`12`| int| the maximum uploaded files - if `1` will not me multiple select|
