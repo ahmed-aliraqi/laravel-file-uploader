@@ -1,6 +1,6 @@
 {
   "name": "laravel-file-uploader",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "This plugin used to upload files using laravel-media-library",
   "repository": {
     "type": "git",
