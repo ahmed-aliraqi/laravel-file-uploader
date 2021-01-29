@@ -1,5 +1,10 @@
 # Change Log
 
+### 2.1.0
+- **Added**
+    - Add preview component.
+- **Fixes**
+    - Add ability to preview audios and videos.
 ### 2.0.4
 - **Fixes**
     - Remove uploading spinner when reset the file input.

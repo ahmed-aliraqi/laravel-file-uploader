@@ -719,6 +719,10 @@ video {
   height: 8rem;
 }
 
+.uploader-h-48 {
+  height: 12rem;
+}
+
 .uploader-h-full {
   height: 100%;
 }
@@ -785,6 +789,10 @@ video {
 
 .uploader-p-1 {
   padding: 0.25rem;
+}
+
+.uploader-p-8 {
+  padding: 2rem;
 }
 
 .uploader-py-2 {

@@ -80,6 +80,12 @@ Vue.use(FileUploader);
 ></file-uploader>
 ```
 
+##### File Preview Component
+This component used to preview uploaded media (images, audios, videos).
+```blade
+<file-preview :media="{{ $user->getMediaResource('avatars') }}"></file-preview>
+```
+
 > **Note:**
 > Do not forget to store the laravel `csrf` token in an HTML `meta` tag:
 ```blade

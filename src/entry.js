@@ -1,10 +1,12 @@
 
 import component from "./file-uploader.vue";
+import preview from "./file-preview.vue";
 
 function install(Vue) {
   if (install.installed) return;
   install.installed = true;
   Vue.component("file-uploader", component);
+  Vue.component("file-preview", preview);
 }
 
 const plugin = {
