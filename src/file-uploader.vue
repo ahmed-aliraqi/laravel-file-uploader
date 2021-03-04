@@ -214,7 +214,7 @@ export default {
           }
         }
       };
-      xhr.open("GET", '/api/uploader/media?' + params, true);
+      xhr.open("GET", '/api/uploader/media?collection=' + this.collection + '&' + params, true);
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       let token = document.head.querySelector('meta[name="csrf-token"]');
       if (token) {
