@@ -1,5 +1,8 @@
 # Change Log
 
+### 2.3.0
+- **Added**
+    - add `v-model` support.
 ### 2.2.0
 - **Added**
     - Add ability to optimize images before upload.

@@ -87,6 +87,27 @@ Vue.use(FileUploader);
 |max-width| optional - default: `1200`|string|The maximum width of uploaded image|
 |max-height| optional - default: `1200`|string|The maximum height of uploaded image|
 
+##### Use With Vue Or SPA Applications
+* beforeUpload
+* complete
+```html
+<file-uploader 
+    name="media"
+    v-model="tokens"
+></file-uploader>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                tokens: []
+            }
+        }
+    })
+</script>
+```
+
 ##### Events  
 * beforeUpload
 * complete
