@@ -1,5 +1,8 @@
 # Change Log
 
+### 2.2.0
+- **Added**
+    - Add ability to optimize images before upload.
 ### 2.1.0
 - **Added**
     - Add preview component.
