@@ -88,8 +88,6 @@ Vue.use(FileUploader);
 |max-height| optional - default: `1200`|string|The maximum height of uploaded image|
 
 ##### Use With Vue Or SPA Applications
-* beforeUpload
-* complete
 ```html
 <file-uploader 
     name="media"
