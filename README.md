@@ -54,6 +54,22 @@ Vue.use(FileUploader);
                accept="image/jpeg,image/png,image/jpg,image/gif"
 ></file-uploader>
 ```
+
+#### Working with images
+> You optimize images size before uploading by adding `max-{width|height}` attribute and will upload the image as a base64 file:
+```blade
+<file-uploader :media="{{ $user->getMediaResource('avatars') }}"
+               :unlimited="true"
+               collection="avatars"
+               name="media"
+               max-width="800"
+               max-height="800"
+               :tokens="{{ json_encode(old('media', [])) }}"
+               label="Upload Avatar"
+               notes="Supported types: jpeg, png,jpg,gif"
+               accept="image/jpeg,image/png,image/jpg,image/gif"
+></file-uploader>
+```
 ##### Attributes
 | Attribute |Rule | Type  |Description |
 |--|--|--|--|
@@ -68,6 +84,8 @@ Vue.use(FileUploader);
 |collection| optional - default `default`|string| the media library collection that the file will store in|
 |tokens| optional - default: `[]`|array|the recently uploaded files tokens, used to display recently uploaded files in validation case|
 |name| optional - default: `null`|array|the input name of the uploader|
+|max-width| optional - default: `1200`|string|The maximum width of uploaded image|
+|max-height| optional - default: `1200`|string|The maximum height of uploaded image|
 
 ##### Events  
 * beforeUpload

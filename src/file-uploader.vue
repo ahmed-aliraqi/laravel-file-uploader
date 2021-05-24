@@ -91,7 +91,8 @@
          @click.self="preview = null"
          class="uploader-overflow-auto uploader-fixed uploader-flex uploader-justify-center uploader-w-full uploader-h-full uploader-top-0 uploader-left-0 uploader-bg-black uploader-bg-opacity-50 uploader-z-999999999">
 
-      <div class="uploader-w-full md:uploader-w-1/2 uploader-mx-2 uploader-rounded-t-lg uploader-shadow-md uploader-mt-10 uploader-bg-white uploader-h-300-px uploader-relative uploader-border uploader-border-gray-600">
+      <div
+          class="uploader-w-full md:uploader-w-1/2 uploader-mx-2 uploader-rounded-t-lg uploader-shadow-md uploader-mt-10 uploader-bg-white uploader-h-300-px uploader-relative uploader-border uploader-border-gray-600">
         <button
             @click.prevent="preview = null"
             class="uploader-bg-gray-600 hover:uploader-bg-gray-800 uploader-shadow-md uploader-absolute uploader-text-white uploader-z-10 uploader-w-6 uploader-h-6 uploader-text-sm uploader-top-10 uploader-right-10 uploader-flex uploader-items-center uploader-justify-center focus:uploader-outline-none">
@@ -101,14 +102,17 @@
           </svg>
         </button>
         <div class="uploader-h-full uploader-flex uploader-items-center">
-          <img v-if="preview && preview.mime_type.includes('image')" class="uploader-object-contain uploader-w-full uploader-p-1 uploader-h-full"
+          <img v-if="preview && preview.mime_type.includes('image')"
+               class="uploader-object-contain uploader-w-full uploader-p-1 uploader-h-full"
                :src="preview.url"
                alt="preview">
-          <audio v-if="preview && preview.mime_type.includes('audio')" controls class="focus:uploader-outline-none uploader-p-8 uploader-w-full uploader-h-48">
+          <audio v-if="preview && preview.mime_type.includes('audio')" controls
+                 class="focus:uploader-outline-none uploader-p-8 uploader-w-full uploader-h-48">
             <source :src="preview.url" :type="preview.mime_type">
             Your browser does not support the audio tag.
           </audio>
-          <video v-if="preview && preview.mime_type.includes('video')" controls class="focus:uploader-outline-none uploader-p-8 uploader-w-full uploader-h-full">
+          <video v-if="preview && preview.mime_type.includes('video')" controls
+                 class="focus:uploader-outline-none uploader-p-8 uploader-w-full uploader-h-full">
             <source :src="preview.url" :type="preview.mime_type">
             Your browser does not support the video tag.
           </video>
@@ -161,6 +165,14 @@ export default {
       required: false,
       type: String,
       default: 'default',
+    },
+    maxWidth: {
+      required: false,
+      default: '800',
+    },
+    maxHeight: {
+      required: false,
+      default: '800',
     },
     tokens: {
       required: false,
@@ -264,35 +276,91 @@ export default {
         }
       }
     },
+    resizeImage(base64Str) {
+      return new Promise((resolve) => {
+
+        let img = new Image()
+        img.src = base64Str
+        return img.onload = () => {
+          let canvas = document.createElement('canvas')
+          const MAX_WIDTH = this.maxWidth
+          const MAX_HEIGHT = this.maxHeight
+          let width = img.width
+          let height = img.height
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width
+              width = MAX_WIDTH
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height
+              height = MAX_HEIGHT
+            }
+          }
+          canvas.width = width
+          canvas.height = height
+          let ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+          resolve(canvas.toDataURL())
+        }
+
+      })
+    },
     upload(file) {
       return new Promise((resolve, reject) => {
         this.beforeUploading();
         let formData = new FormData();
-        formData.append('file', file);
-        formData.append('collection', this.collection);
-        let xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-          if (this.readyState === 4) {
-            if (this.status === 200) {
-              if (this.responseText) {
-                resolve(JSON.parse(this.responseText));
-              }
-            } else {
-              if (this.responseText) {
-                reject(JSON.parse(this.responseText));
+
+        if (file.type.includes('image')) {
+
+          const reader = new FileReader();
+
+          let resize = async () => {
+            let image = await this.resizeImage(reader.result);
+
+            formData.append('file', image);
+          }
+
+
+          reader.addEventListener("load", resize, false);
+
+
+          if (file) {
+            reader.readAsDataURL(file);
+          }
+
+        } else {
+          formData.append('file', file);
+        }
+        // TODO: refactor
+        setTimeout(() => {
+          formData.append('collection', this.collection);
+          let xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function () {
+            if (this.readyState === 4) {
+              if (this.status === 200) {
+                if (this.responseText) {
+                  resolve(JSON.parse(this.responseText));
+                }
+              } else {
+                if (this.responseText) {
+                  reject(JSON.parse(this.responseText));
+                }
               }
             }
+          };
+          xhr.open("POST", '/api/uploader/media/upload', true);
+          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+          let token = document.head.querySelector('meta[name="csrf-token"]');
+          if (token) {
+            xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
+          } else {
+            console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
           }
-        };
-        xhr.open("POST", '/api/uploader/media/upload', true);
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        let token = document.head.querySelector('meta[name="csrf-token"]');
-        if (token) {
-          xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
-        } else {
-          console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-        }
-        xhr.send(formData);
+          xhr.send(formData);
+        }, 1000);
       });
     },
     deleteFile(file) {
