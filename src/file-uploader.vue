@@ -264,6 +264,7 @@ export default {
                 let file = response.data;
                 this.files.push(file[0]);
                 this.values.push(response.token);
+                this.$emit('input', this.values.length === 1 ? this.values[0] : this.values)
                 this.complete();
               })
               .catch(error => {
