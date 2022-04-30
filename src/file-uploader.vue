@@ -86,7 +86,16 @@
 
 
     <input type="hidden" :form="form" :name="`${(name)}[]`" v-for="token in values" :value="token">
-    <small class="uploader-text-gray-600">{{ notes }}</small>
+    <small class="uploader-text-gray-600" v-if="errors.length === 0">{{ notes }}</small>
+    <p class="uploader-flex uploader-items-center uploader-text-red-600"
+       v-if="errors.length && displayValidationMessages"
+       v-for="error in errors">
+      <svg class="uploader-w-5 uploader-w-5 uploader-inline uploader-mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      {{ error.message }} (<u class="uploader-cursor-pointer">{{ error.filename }}</u>)
+    </p>
     <div v-if="preview"
          @click.self="preview = null"
          class="uploader-overflow-auto uploader-fixed uploader-flex uploader-justify-center uploader-w-full uploader-h-full uploader-top-0 uploader-left-0 uploader-bg-black uploader-bg-opacity-50 uploader-z-999999999">
@@ -174,12 +183,21 @@ export default {
       required: false,
       default: '800',
     },
+    value: {
+      required: false,
+      type: Object / Array,
+      default: () => [],
+    },
     tokens: {
       required: false,
-      type: Array,
-      default: [],
+      type: Object / Array,
+      default: () => [],
     },
     form: {
+      required: false,
+      default: false
+    },
+    displayValidationMessages: {
       required: false,
       default: false
     },
@@ -198,6 +216,7 @@ export default {
       uploading: false,
       preview: null,
       maximum: this.max,
+      errors: [],
     }
   },
   created() {
@@ -211,11 +230,11 @@ export default {
     if (this.unlimited) {
       this.maximum = 0;
     }
-    if (this.tokens.length) {
+    if (this.value.length) {
       let xhr = new XMLHttpRequest();
       var vueInstance = this;
-      let params = Object.keys(this.tokens).map((key) => {
-        return 'tokens[]=' + this.tokens[key]
+      let params = Object.keys(this.value).map((key) => {
+        return 'tokens[]=' + this.value[key]
       }).join('&');
       xhr.onreadystatechange = function () {
         if (this.readyState === 4) {
@@ -264,7 +283,7 @@ export default {
                 let file = response.data;
                 this.files.push(file[0]);
                 this.values.push(response.token);
-                this.$emit('input', this.values.length === 1 ? this.values[0] : this.values)
+                this.$emit('input', this.values)
                 this.complete();
               })
               .catch(error => {
@@ -272,6 +291,15 @@ export default {
                   this.pending--;
                 }
                 this.uploading = false;
+
+                if (error.status === 422) {
+                  this.errors.push({
+                    message: error.response.errors.file[0],
+                    filename: error.file.name
+                  })
+                }
+
+                this.$emit('upload-error', error)
                 this.complete();
               });
         }
@@ -347,7 +375,11 @@ export default {
                 }
               } else {
                 if (this.responseText) {
-                  reject(JSON.parse(this.responseText));
+                  reject({
+                    response: JSON.parse(this.responseText),
+                    status: this.status,
+                    file: file
+                  });
                 }
               }
             }

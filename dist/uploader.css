@@ -667,6 +667,10 @@ video {
   cursor: pointer;
 }
 
+.uploader-inline {
+  display: inline;
+}
+
 .uploader-flex {
   display: flex;
 }
@@ -860,6 +864,12 @@ video {
   --text-opacity: 1;
   color: #718096;
   color: rgba(113, 128, 150, var(--text-opacity));
+}
+
+.uploader-text-red-600 {
+  --text-opacity: 1;
+  color: #e53e3e;
+  color: rgba(229, 62, 62, var(--text-opacity));
 }
 
 .uploader-w-5 {
